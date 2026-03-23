@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_1?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&useSSL=false
+    username: root
+    password: 123456
+  application:
+    name: ddd-base
+
+server:
+  port: 9000
+
+mybatis-plus:
+  global-config:
+    db-config:
+      # 设置表名前缀
+      table-prefix: t_
+      # 是否开启表名自动驼峰转下划线（默认开启，如 SysUser -> t_sys_user）
+      table-underline: true
