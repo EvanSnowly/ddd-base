@@ -1,6 +1,8 @@
-package me.wuxuefeng.dddbase.api.base;
+package me.wuxuefeng.dddbase.api.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import me.wuxuefeng.dddbase.base.BaseErrorCode;
+import me.wuxuefeng.dddbase.base.ErrorCode;
 
 /**
  * 统一响应结果集
@@ -17,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * @since 1.0.0
  */
 public record Result<T>(
-        int code,
+        String code,
         String msg,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         T data,
@@ -32,7 +34,7 @@ public record Result<T>(
      * @return Result 实例
      */
     public static <T> Result<T> success(T data) {
-        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data, System.currentTimeMillis());
+        return new Result<>(BaseErrorCode.successCode().getCode(), BaseErrorCode.successCode().getMessage(), data, System.currentTimeMillis());
     }
 
     /**
@@ -52,7 +54,7 @@ public record Result<T>(
      * @param <T>        数据类型
      * @return Result 实例
      */
-    public static <T> Result<T> failure(ResultCode resultCode) {
+    public static <T> Result<T> failure(ErrorCode resultCode) {
         return new Result<>(resultCode.getCode(), resultCode.getMessage(), null, System.currentTimeMillis());
     }
 
@@ -64,18 +66,9 @@ public record Result<T>(
      * @param <T>  数据类型
      * @return Result 实例
      */
-    public static <T> Result<T> failure(int code, String msg) {
+    public static <T> Result<T> failure(String code, String msg) {
         return new Result<>(code, msg, null, System.currentTimeMillis());
     }
 
-    /**
-     * 失败返回 - 快速业务异常提示
-     *
-     * @param msg 业务提示信息
-     * @param <T> 数据类型
-     * @return Result 实例
-     */
-    public static <T> Result<T> error(String msg) {
-        return failure(ResultCode.FAILURE.getCode(), msg);
-    }
+
 }

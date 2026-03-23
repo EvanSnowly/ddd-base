@@ -1,4 +1,4 @@
-package me.wuxuefeng.dddbase.infuastructure.exception;
+package me.wuxuefeng.dddbase.infrastructure.exception;
 
 import me.wuxuefeng.dddbase.base.BizException;
 import me.wuxuefeng.dddbase.base.ErrorCode;

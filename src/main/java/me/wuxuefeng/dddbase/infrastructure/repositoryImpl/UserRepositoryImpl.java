@@ -1,9 +1,9 @@
-package me.wuxuefeng.dddbase.infuastructure.repositoryImpl;
+package me.wuxuefeng.dddbase.infrastructure.repositoryImpl;
 
 import jakarta.annotation.Resource;
 import me.wuxuefeng.dddbase.domain.module.User;
 import me.wuxuefeng.dddbase.domain.repository.UserRepository;
-import me.wuxuefeng.dddbase.infuastructure.mp.service.UserIService;
+import me.wuxuefeng.dddbase.infrastructure.mp.service.UserIService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,6 +32,17 @@ public class UserRepositoryImpl implements UserRepository {
         return userIService.lambdaQuery()
                 .eq(User::getUserName, userName)
                 .one();
+    }
+
+    /**
+     * 保存新用户信息
+     *
+     * @param user 待保存的用户实体
+     * @return 是否成功
+     */
+    @Override
+    public boolean save(User user) {
+        return userIService.save(user);
     }
 
     /**

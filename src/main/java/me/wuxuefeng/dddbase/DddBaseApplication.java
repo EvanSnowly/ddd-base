@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0.0
  */
 @SpringBootApplication
-@MapperScan("me.wuxuefeng.dddbase.infuastructure.mp.mapper")
+@MapperScan("me.wuxuefeng.dddbase.infrastructure.mp.mapper")
 public class DddBaseApplication {
 
     /**

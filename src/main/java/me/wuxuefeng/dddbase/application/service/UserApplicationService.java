@@ -1,12 +1,15 @@
 package me.wuxuefeng.dddbase.application.service;
 
 import jakarta.annotation.Resource;
-import me.wuxuefeng.dddbase.api.request.UserLoginRequest;
+import me.wuxuefeng.dddbase.api.mapper.UserConverter;
+import me.wuxuefeng.dddbase.application.command.UserLoginCommand;
+import me.wuxuefeng.dddbase.application.command.UserRegisterCommand;
 import me.wuxuefeng.dddbase.domain.module.User;
 import me.wuxuefeng.dddbase.domain.repository.UserRepository;
-import me.wuxuefeng.dddbase.infuastructure.exception.UserErrorCode;
-import me.wuxuefeng.dddbase.infuastructure.exception.UserException;
+import me.wuxuefeng.dddbase.infrastructure.exception.UserErrorCode;
+import me.wuxuefeng.dddbase.infrastructure.exception.UserException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -26,6 +29,35 @@ public class UserApplicationService {
     @Resource
     private UserRepository userRepository;
 
+    @Resource
+    private UserConverter userConverter;
+
+    /**
+     * 用户注册处理流程
+     * <p>
+     * 1. 检查用户名是否已存在<br/>
+     * 2. 将命令转换为领域对象<br/>
+     * 3. 持久化用户信息
+     * </p>
+     *
+     * @param userRegisterCommand 注册命令对象
+     * @throws UserException 当用户名已存在时抛出
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void register(UserRegisterCommand userRegisterCommand) {
+        // 1. 业务校验：用户名查重
+        User existingUser = userRepository.findByUserName(userRegisterCommand.userName());
+        if (Objects.nonNull(existingUser)) {
+            throw new UserException(UserErrorCode.USER_ALREADY_EXISTS);
+        }
+
+        // 2. 转换为领域实体
+        User user = userConverter.toUser(userRegisterCommand);
+
+        // 3. 执行持久化
+        userRepository.save(user);
+    }
+
     /**
      * 用户登录处理流程
      * <p>
@@ -35,12 +67,12 @@ public class UserApplicationService {
      * 4. 将更新后的实体进行持久化
      * </p>
      *
-     * @param userLoginRequest 登录请求参数
+     * @param userLoginCommand 登录请求参数
      * @throws UserException 当用户不存在或认证失败时抛出
      */
-    public void login(UserLoginRequest userLoginRequest) {
+    public void login(UserLoginCommand userLoginCommand) {
         // 1. 获取领域实体
-        User user = userRepository.findByUserName(userLoginRequest.userName());
+        User user = userRepository.findByUserName(userLoginCommand.userName());
 
         // 2. 基础合法性检查
         if (Objects.isNull(user)) {
@@ -48,7 +80,7 @@ public class UserApplicationService {
         }
 
         // 3. 执行领域行为：认证
-        boolean auth = user.auth(userLoginRequest.password());
+        boolean auth = user.auth(userLoginCommand.password());
         if (!auth) {
             throw new UserException(UserErrorCode.USER_AUTH_ERROR);
         }

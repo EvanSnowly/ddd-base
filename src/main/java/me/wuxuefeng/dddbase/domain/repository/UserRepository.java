@@ -23,6 +23,14 @@ public interface UserRepository {
     User findByUserName(String userName);
 
     /**
+     * 保存新用户信息
+     *
+     * @param user 待保存的用户实体
+     * @return 是否成功
+     */
+    boolean save(User user);
+
+    /**
      * 根据 ID 更新用户
      *
      * @param user 用户实体（包含待更新的 ID）

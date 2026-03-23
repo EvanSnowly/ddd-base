@@ -1,4 +1,4 @@
-package me.wuxuefeng.dddbase.infuastructure.mp.mapper;
+package me.wuxuefeng.dddbase.infrastructure.mp.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import me.wuxuefeng.dddbase.domain.module.User;

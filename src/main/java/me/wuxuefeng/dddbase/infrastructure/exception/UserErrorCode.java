@@ -1,4 +1,4 @@
-package me.wuxuefeng.dddbase.infuastructure.exception;
+package me.wuxuefeng.dddbase.infrastructure.exception;
 
 import me.wuxuefeng.dddbase.base.ErrorCode;
 
@@ -21,7 +21,15 @@ public enum UserErrorCode implements ErrorCode {
     /**
      * 认证失败（账号或密码错误）
      */
-    USER_AUTH_ERROR("USER_AUTH_ERROR", "账号密码错误");
+    USER_AUTH_ERROR("USER_AUTH_ERROR", "账号密码错误"),
+    /**
+     * 用户已存在
+     */
+    USER_ALREADY_EXISTS("USER_ALREADY_EXISTS", "用户名已存在"),
+    /**
+     * 用户参数异常
+     */
+    USER_ARGUMENT_ERROR("USER_ARGUMENT_ERROR", "用户参数异常");
 
     private final String code;
     private final String message;

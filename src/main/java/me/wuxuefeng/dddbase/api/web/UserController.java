@@ -1,8 +1,13 @@
 package me.wuxuefeng.dddbase.api.web;
 
 import jakarta.annotation.Resource;
-import me.wuxuefeng.dddbase.api.base.Result;
+import jakarta.validation.Valid;
+import me.wuxuefeng.dddbase.api.response.Result;
+import me.wuxuefeng.dddbase.api.mapper.UserConverter;
 import me.wuxuefeng.dddbase.api.request.UserLoginRequest;
+import me.wuxuefeng.dddbase.api.request.UserRegisterRequest;
+import me.wuxuefeng.dddbase.application.command.UserLoginCommand;
+import me.wuxuefeng.dddbase.application.command.UserRegisterCommand;
 import me.wuxuefeng.dddbase.application.service.UserApplicationService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +31,25 @@ public class UserController {
     @Resource
     private UserApplicationService userApplicationService;
 
+    @Resource
+    private UserConverter userConverter;
+
+
+    /**
+     * 用户注册接口
+     *
+     * @param userRegisterRequest 注册请求参数
+     * @return 统一响应结果 Result
+     */
+    @PostMapping("/register")
+    public Result<Void> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
+
+        UserRegisterCommand userRegisterCommand = userConverter.toUserRegisterCommand(userRegisterRequest);
+
+        userApplicationService.register(userRegisterCommand);
+
+        return Result.success();
+    }
 
     /**
      * 用户登录接口
@@ -34,11 +58,13 @@ public class UserController {
      * @return 统一响应结果Result，无返回数据
      */
     @PostMapping("/login")
-    public Result<Void> login(@RequestBody UserLoginRequest userLoginRequest) {
+    public Result<Void> login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
 
-        userApplicationService.login(userLoginRequest);
+
+        UserLoginCommand userLoginCommand = userConverter.toUserLoginCommand(userLoginRequest);
+
+        userApplicationService.login(userLoginCommand);
 
         return Result.success();
-
     }
 }

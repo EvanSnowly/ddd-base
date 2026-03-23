@@ -1,4 +1,4 @@
-package me.wuxuefeng.dddbase.api.base;
+package me.wuxuefeng.dddbase.api.response;
 
 /**
  * 业务结果状态码枚举

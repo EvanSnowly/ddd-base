@@ -1,4 +1,4 @@
-package me.wuxuefeng.dddbase.infuastructure.mp.service;
+package me.wuxuefeng.dddbase.infrastructure.mp.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import me.wuxuefeng.dddbase.domain.module.User;
