@@ -5,25 +5,33 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * 用户领域实体 (Domain Entity)
+ * <p>
+ * 包含用户的核心属性及业务行为。
+ * </p>
+ *
+ * @author wuxuefeng
+ * @since 1.0.0
+ */
 @Data
 @TableName("t_user")
 public class User {
 
     /**
-     * 用户id
+     * 用户 ID (主键自增)
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 用户账号
-     * 指定数据库字段名，确保 LambdaQuery 能够正确解析
+     * 用户账号 (唯一标识)
      */
     @TableField("user_name")
     private String userName;
 
     /**
-     * 用户密码
+     * 用户密码 (应存储哈希后的值)
      */
     @TableField(value = "password")
     private String password;
@@ -35,20 +43,19 @@ public class User {
     private String phone;
 
     /**
-     * 邮箱
+     * 邮箱地址
      */
     @TableField("email")
     private String email;
 
     /**
-     * 最近登录时间
+     * 最近一次成功登录的时间
      */
     @TableField("last_login_time")
     private LocalDateTime lastLoginTime;
 
     /**
-     * 创建时间
-     * fill = FieldFill.INSERT: 自动填充，无需手动 set
+     * 记录创建时间 (MyBatis Plus 自动填充)
      */
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -56,8 +63,13 @@ public class User {
     /* ---------------- 领域行为 (Domain Logic) ---------------- */
 
     /**
-     * 验证密码
-     * 建议：实际项目中应使用 passwordEncoder.matches(raw, hash)
+     * 验证用户密码是否正确
+     * <p>
+     * 建议：在生产环境中应使用加密匹配逻辑，例如 BCrypt.checkpw(raw, hash)。
+     * </p>
+     *
+     * @param inputPassword 输入的明文密码
+     * @return 验证通过返回 true，否则返回 false
      */
     public boolean auth(String inputPassword) {
         if (this.password == null) {
@@ -67,10 +79,12 @@ public class User {
     }
 
     /**
-     * 业务逻辑：更新登录状态
+     * 业务逻辑：处理登录成功后的副作用
+     * <p>
+     * 更新最近登录时间。未来可扩展如积分奖励、连续登录天数更新等。
+     * </p>
      */
     public void loginSuccess() {
         this.lastLoginTime = LocalDateTime.now();
-        // 这里可以扩展更多逻辑，如记录登录日志
     }
 }
